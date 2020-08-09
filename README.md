@@ -4,7 +4,7 @@ A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR 
 
 ##### Contents  
 1. [ Installation. ](#Installation)
-1. [ Language Specification. ](#Language Specification)
+1. [ Language Specification. ](#LanguageSpecification)
 3. [ Usage. ](#Usage)
 4. [ Support. ](#Support)
 
@@ -21,7 +21,7 @@ pip install llvmlite click
 
 Next, you can clone this repository.
 
-<a name="Language Specification"></a>
+<a name="LanguageSpecification"></a>
 ## Language Specification
 
 The Pseudocode syntax is similar to the IGCSE specification outlined here: https://filestore.aqa.org.uk/resources/computing/AQA-8520-TG-PC.PDF. However, there are notable differences between the AQA Pseudocode and this standard. This is because my school uses a variation of the AQA standard, so I sought to replicate it.
