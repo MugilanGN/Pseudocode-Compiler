@@ -16,6 +16,8 @@ Next, you can clone this repository.
 
 ## Language Specification
 
+The Pseudocode syntax is similar to the IGCSE specification outlined here: https://filestore.aqa.org.uk/resources/computing/AQA-8520-TG-PC.PDF. However, there are notable differences between the AQA Pseudocode and this standard. This is because my school uses a variation of the AQA standard, so I sought to replicate it.
+
 ### Data Types
 
 There are three data types that are exposed to the user: integer, double, and string.
