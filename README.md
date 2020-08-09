@@ -20,7 +20,54 @@ The Pseudocode syntax is similar to the IGCSE specification outlined here: https
 
 ### Data Types
 
-There are three data types that are exposed to the user: integer, double, and string.
+There are three data types that the user can use: integer, double, and string. In general, the following is true for operations:
+
+- an Int and an Int will result in an Int
+- a Double and a Double results in a Double
+- a Double and an Int will result in a Double
+
+Strings cannot be mixed with the other data types. However, two strings can be concatenated through the plus sign operator.
+
+### Literals
+
+Literals are values like ```5, "hello", 6.6```. A number is considered a double if it has a decimal point; otherwise it is taken as an int. String literals are surrounded in quotation marks.
+
+### Variables
+
+Variables are statically typed, but there is type inference, so the data type is not specified. Its static typing means that data cannot be assigned to a variable of a different type.
+
+```
+x = 5 + 3.0 // 5 + 3.0 = 8.0 so x is a double
+x = 3 // this is illegal since an int is assigned to a double
+```
+
+Variables should not be redeclared with a different type like the above example. However, assigning a new value of the same type is syntactically identical to declaration and initialization. They should not be declared inside if statements either.
+
+```
+var = 6.0
+var = var + 1
+```
+
+### If statements
+
+
+
+
+### Output
+
+The Output statement prints whatever it is given to the screen.
+
+```OUTPUT "Hello World"```
+
+It can be given variables, expressions, and array indices.
+
+```
+OUTPUT 5 + (4.0 * 3)
+OUTPUT x + y
+OUTPUT "Hello" + " " + "World"
+```
+
+
 
 ## Usage
 
