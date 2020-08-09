@@ -32,7 +32,7 @@ Next, you can clone this repository.
   python src/compiler.py --filename="ex/code.pc" --output="code.ll"
   ```
  
-#### The Lexer
+### The Lexer
 
 The lexer can be imported into your code like so:
 
@@ -53,7 +53,7 @@ To output the tokens of a string input, you can use the ```test``` method:
 lexer.test("INT") # will return the INT token
 ```
 
-#### The Parser
+### The Parser
 
 The parser class resides in pc_parser:
 
@@ -73,7 +73,7 @@ The ```parse``` method will output an AST of the string input:
 parser.parse("x = 5") #will return an AST with an assignment object
 ```
 
-#### The IR Generator
+### The IR Generator
 
 The IR generator can be used standalone without the parser and lexer. It takes an AST and generates LLVM IR from it.
 
