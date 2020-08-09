@@ -286,8 +286,6 @@ class Generator:
                     res = builder.frem(lvalue, rvalue, name="t")
 
                 elif node.dType == int:
-                    print(lvalue, rvalue)
-
                     res = builder.srem(lvalue, rvalue, name="t")
 
             elif node.op in cmp_op:
