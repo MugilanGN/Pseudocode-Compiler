@@ -17,6 +17,8 @@ Next, you can clone this repository.
 ## Usage
 
 ### Running the Compiler
+  
+  Compiler.py is the program that will compile the Pseudocode. It can be ran through the CLI.
 
   Arguments in the CLI are typed like so: ```--output="file.ll"```
  
