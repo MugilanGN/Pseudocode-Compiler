@@ -1,0 +1,3 @@
+x = "Hello"
+y = "World"
+OUTPUT x + " " + y
