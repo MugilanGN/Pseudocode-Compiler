@@ -3,21 +3,21 @@
 A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR can then be executed via other tools, like lli, that are a part of the LLVM project. Thus, an executable for any platform (Linux, Windows, Mac OS, etc.,) can be generated.
 
 ## Contents  
-1. [ Installation. ](#Installation)
-2. [ Language Specification. ](#LanguageSpecification)
-    - [ Data Types. ](#types)
-    - [ Literals. ](#literals)
-    - [ Variables. ](#variables)
-    - [ If Statements. ](#if)
-    - [ While Loops. ](#while)
-    - [ Arrays. ](#arrays)
-    - [ Output. ](#output)
-3. [ Usage. ](#Usage)
-    - [ Executing the Compiler. ](#compiler)
-    - [ The Lexer. ](#lexer)
-    - [ The Parser. ](#parser)
-    - [ The IR Generator. ](#generator)
-4. [ Support. ](#Support)
+1. [ Installation ](#Installation)
+2. [ Language Specification ](#LanguageSpecification)
+    - [ Data Types ](#types)
+    - [ Literals ](#literals)
+    - [ Variables ](#variables)
+    - [ If Statements ](#if)
+    - [ While Loops ](#while)
+    - [ Arrays ](#arrays)
+    - [ Output ](#output)
+3. [ Usage ](#Usage)
+    - [ Executing the Compiler ](#compiler)
+    - [ The Lexer ](#lexer)
+    - [ The Parser ](#parser)
+    - [ The IR Generator ](#generator)
+4. [ Support ](#Support)
 
 <a name="Installation"></a>
 ## Installlation
