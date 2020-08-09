@@ -71,6 +71,39 @@ x + 1 < 40/x
 ```
 ### While Loops
 
+A while loop can be represented like so:
+
+```
+WHILE condition DO
+   statement
+ENDWHILE
+```
+
+### Arrays
+
+#### Array Declaration
+
+An array is declared with its data type, and then its name, followed by the number of elements it has. There are only Int and Double Arrays
+
+```
+INT x[5]
+DOUBLE y[100 + (5 * 3)]
+```
+
+#### Array Elements
+
+Array elements can be accessed through the square bracket notation:
+
+```
+y = x[0] + 3  // x[0] gives the 1st element of x
+```
+
+They can be assigned to just like variables, but the data assigned to that index must be of the same type as the array:
+
+```
+INT x[11]
+x[10] = 345 + 3
+```
 
 ### Output
 
