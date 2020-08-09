@@ -2,7 +2,7 @@
 
 A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR can then be executed via other tools, like lli, that are a part of the LLVM project. Thus, an executable for any platform (Linux, Windows, Mac OS, etc.,) can be generated.
 
-##### Contents  
+## Contents  
 1. [ Installation. ](#Installation)
 2. [ Language Specification. ](#LanguageSpecification)
     - [ Data Types. ](#types)
