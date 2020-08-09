@@ -4,7 +4,7 @@ A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR.
 
 ## Installlation
 
-This project was built on Python 3.8.7
+This project was built on Python 3
 
 Run this to install the necessary dependencies:
 
