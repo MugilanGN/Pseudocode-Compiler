@@ -4,8 +4,12 @@ A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR 
 
 ##### Contents  
 1. [ Installation. ](#Installation)
-1. [ Language Specification. ](#LanguageSpecification)
+2. [ Language Specification. ](#LanguageSpecification)
 3. [ Usage. ](#Usage)
+  - [ Executing the Compiler. ](#compiler)
+  - [ The Lexer. ](#lexer)
+  - [ The Parser. ](#parser)
+  - [ The IR Generator. ](#generator)
 4. [ Support. ](#Support)
 
 <a name="Installation"></a>
@@ -142,6 +146,7 @@ OUTPUT "Hello" + " " + "World"
 <a name="Usage"></a>
 ## Usage
 
+<a name="compiler"></a>
 ### Executing the Compiler
   
   Compiler.py is the program that will compile the Pseudocode. It can be ran through the CLI.
@@ -157,7 +162,7 @@ OUTPUT "Hello" + " " + "World"
   ```sh
   python src/compiler.py --filename="ex/code.pc" --output="code.ll"
   ```
- 
+<a name="lexer"></a>
 ### The Lexer
 
 The lexer can be imported into your code like so:
@@ -179,6 +184,7 @@ To output the tokens of a string input, you can use the ```test``` method:
 lexer.test("INT") # will return the INT token
 ```
 
+<a name="parser"></a>
 ### The Parser
 
 The parser class resides in pc_parser:
@@ -199,6 +205,7 @@ The ```parse``` method will output an AST of the string input:
 parser.parse("x = 5") #will return an AST with an assignment object
 ```
 
+<a name="generator"></a>
 ### The IR Generator
 
 The IR generator can be used standalone without the parser and lexer. It takes an AST and generates LLVM IR from it.
