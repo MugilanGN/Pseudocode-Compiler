@@ -18,6 +18,8 @@ Next, you can clone this repository.
 
 The Pseudocode syntax is similar to the IGCSE specification outlined here: https://filestore.aqa.org.uk/resources/computing/AQA-8520-TG-PC.PDF. However, there are notable differences between the AQA Pseudocode and this standard. This is because my school uses a variation of the AQA standard, so I sought to replicate it.
 
+I will be using ```//``` for convenience to denote comments in the Pseudocode snippets, but keep in mind that they are not actually a part of the language, nor will they compile.
+
 ### Data Types
 
 There are three data types that the user can use: integer, double, and string. In general, the following is true for operations:
