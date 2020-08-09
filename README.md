@@ -90,7 +90,7 @@ OUTPUT "Hello" + " " + "World"
 
 ## Usage
 
-### Running the Compiler
+### Executing the Compiler
   
   Compiler.py is the program that will compile the Pseudocode. It can be ran through the CLI.
 
