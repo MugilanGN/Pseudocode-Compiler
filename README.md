@@ -20,7 +20,7 @@ A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR 
 - [ Support ](#Support)
 
 <a name="Installation"></a>
-## Installlation
+## Installation
 
 This project was built on Python 3
 
