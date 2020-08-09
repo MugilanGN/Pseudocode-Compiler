@@ -56,11 +56,17 @@ If statements follow the following format:
 
 ```
 IF condition THEN
-  statement //indents are optional
+  statement  //indents are optional
+  ...
+  statement
 ELSE
+  statement
+  ...
   statement
 ENDIF
 ```
+
+If statements can also be nested inside one another.
 
 The else can be ommited, leaving just the block that executes if it is true.
 
@@ -78,8 +84,12 @@ A while loop can be represented like so:
 ```
 WHILE condition DO
    statement
+   ...
+   statement
 ENDWHILE
 ```
+
+While statements can also be nested inside one another and combined with If statements flexibly.
 
 ### Arrays
 
