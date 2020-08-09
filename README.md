@@ -88,6 +88,8 @@ The generator class has a ```generate``` method which takes in an AST and output
 ```python
 module = codegen.generate(ast, output)
 ```
+
+This will return an llvmlite module object, which can either be written into a file or used elsewhere
  
 ## Support
 
