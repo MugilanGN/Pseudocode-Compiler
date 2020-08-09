@@ -1,0 +1,12 @@
+x = 100
+
+i = 0
+
+WHILE i < x DO
+    IF i % 2 == 0 THEN
+        OUTPUT "Even"
+    ELSE
+        OUTPUT "Odd"
+    ENDIF
+    i = i + 1
+ENDWHILE
