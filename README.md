@@ -82,7 +82,7 @@ It can be given variables, expressions, and array indices.
 
 ```
 OUTPUT 5 + (4.0 * 3)
-OUTPUT x + y
+OUTPUT x + y[1]
 OUTPUT "Hello" + " " + "World"
 ```
 
