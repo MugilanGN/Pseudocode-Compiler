@@ -2,11 +2,13 @@
 
 A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR can then be executed via other tools, like lli, that are a part of the LLVM project. Thus, an executable for any platform (Linux, Windows, Mac OS, etc.,) can be generated.
 
-##### Table of Contents  
-1. [ Description. ](#desc)
-2. [ Usage tips. ](#usage)
+##### Contents  
+1. [ Installation. ](#Installation)
+1. [ Language Specification. ](#Language Specification)
+3. [ Usage. ](#Usage)
+4. [ Support. ](#Support)
 
-<a name="desc"></a>
+<a name="Installation"></a>
 ## Installlation
 
 This project was built on Python 3
@@ -19,6 +21,7 @@ pip install llvmlite click
 
 Next, you can clone this repository.
 
+<a name="Language Specification"></a>
 ## Language Specification
 
 The Pseudocode syntax is similar to the IGCSE specification outlined here: https://filestore.aqa.org.uk/resources/computing/AQA-8520-TG-PC.PDF. However, there are notable differences between the AQA Pseudocode and this standard. This is because my school uses a variation of the AQA standard, so I sought to replicate it.
@@ -136,8 +139,7 @@ OUTPUT x + y[1]
 OUTPUT "Hello" + " " + "World"
 ```
 
-
-
+<a name="Usage"></a>
 ## Usage
 
 ### Executing the Compiler
@@ -216,7 +218,8 @@ module = codegen.generate(ast, output)
 ```
 
 This will return an llvmlite module object, which can either be written into a file or used elsewhere
- 
+
+<a name="Support"></a>
 ## Support
 
 If you are having issues, please let me know. You can contact me at mugi.ganesan@gmail.com
