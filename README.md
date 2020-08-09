@@ -1,6 +1,6 @@
 # Pseudocode-Compiler
 
-A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. 
+A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR can then be executed via other tools apart of the LLVM project.
 
 ## Installlation
 
