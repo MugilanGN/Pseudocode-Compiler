@@ -2,6 +2,11 @@
 
 A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR can then be executed via other tools, like lli, that are a part of the LLVM project. Thus, an executable for any platform (Linux, Windows, Mac OS, etc.,) can be generated.
 
+##### Table of Contents  
+1. [ Description. ](#desc)
+2. [ Usage tips. ](#usage)
+
+<a name="desc"></a>
 ## Installlation
 
 This project was built on Python 3
