@@ -5,11 +5,18 @@ A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR 
 ##### Contents  
 1. [ Installation. ](#Installation)
 2. [ Language Specification. ](#LanguageSpecification)
+    - [ Data Types. ](#types)
+    - [ Literals. ](#literals)
+    - [ Variables. ](#variables)
+    - [ If Statements. ](#if)
+    - [ While Loops. ](#while)
+    - [ Arrays. ](#arrays)
+    - [ Output. ](#output)
 3. [ Usage. ](#Usage)
-  - [ Executing the Compiler. ](#compiler)
-  - [ The Lexer. ](#lexer)
-  - [ The Parser. ](#parser)
-  - [ The IR Generator. ](#generator)
+    - [ Executing the Compiler. ](#compiler)
+    - [ The Lexer. ](#lexer)
+    - [ The Parser. ](#parser)
+    - [ The IR Generator. ](#generator)
 4. [ Support. ](#Support)
 
 <a name="Installation"></a>
@@ -32,6 +39,7 @@ The Pseudocode syntax is similar to the IGCSE specification outlined here: https
 
 I will be using ```//``` for convenience to denote comments in the Pseudocode snippets, but keep in mind that they are not actually a part of the language, nor will they compile.
 
+<a name="types"></a>
 ### Data Types
 
 There are three data types that the user can use: integer, double, and string. In general, the following is true for operations:
@@ -42,10 +50,12 @@ There are three data types that the user can use: integer, double, and string. I
 
 Strings cannot be mixed with the other data types. However, two strings can be concatenated through the plus sign operator.
 
+<a name="literals"></a>
 ### Literals
 
 Literals are values like ```5, "hello", 6.6```. A number is considered a double if it has a decimal point; otherwise it is taken as an int. String literals are surrounded in quotation marks.
 
+<a name="variables"></a>
 ### Variables
 
 Variables are statically typed, but there is type inference, so the data type is not specified. Its static typing means that data cannot be assigned to a variable of a different type.
@@ -62,6 +72,7 @@ var = 6.0
 var = var + 1
 ```
 
+<a name="if"></a>
 ### If Statements
 
 If statements follow the following format:
@@ -89,6 +100,8 @@ x > 3
 x + 1 < 40/x
 5 % 2 == 0
 ```
+
+<a name="while"></a>
 ### While Loops
 
 A while loop can be represented like so:
@@ -103,6 +116,7 @@ ENDWHILE
 
 While statements can also be nested inside one another and combined with If statements flexibly.
 
+<a name="arrays"></a>
 ### Arrays
 
 #### Array Declaration
@@ -129,6 +143,7 @@ INT x[11]
 x[10] = 345 + 3
 ```
 
+<a name="output"></a>
 ### Output
 
 The Output statement prints whatever it is given to the screen.
