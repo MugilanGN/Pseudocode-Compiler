@@ -48,9 +48,28 @@ var = 6.0
 var = var + 1
 ```
 
-### If statements
+### If Statements
 
+If statements follow the following format:
 
+```
+IF condition THEN
+  statement //indents are optional
+ELSE
+  statement
+ENDIF
+```
+
+The else can be ommited, leaving just the block that executes if it is true.
+
+The condition takes the form of a comparison, such as:
+
+```
+x > 3
+x + 1 < 40/x
+5 % 2 == 0
+```
+### While Loops
 
 
 ### Output
