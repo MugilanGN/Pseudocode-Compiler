@@ -14,6 +14,12 @@ pip install llvmlite click
 
 Next, you can clone this repository.
 
+## Language Specification
+
+### Data Types
+
+There are three data types that are exposed to the user: integer, double, and string.
+
 ## Usage
 
 ### Running the Compiler
