@@ -58,11 +58,18 @@ Literals are values like ```5, "hello", 6.6```. A number is considered a double 
 <a name="variables"></a>
 ### Variables
 
-Variables are statically typed, but there is type inference, so the data type is not specified. Its static typing means that data cannot be assigned to a variable of a different type.
+Variables are statically typed (data types are set in stone). However, there is type inference, so the data type is not specified.
 
 ```
 x = 5 + 3.0 // 5 + 3.0 = 8.0 so x is a double
-x = 3 // this is illegal since an int is assigned to a double
+y = "Hello" + " World" // y is now a string
+```
+
+The Static typing means that data cannot be assigned to a variable of a different type.
+
+```
+x = 5 // x is now an Int
+x = 3.0 // Illegal since a Double is assigned to an Int
 ```
 
 Variables should not be redeclared with a different type like the above example. However, assigning a new value of the same type is syntactically identical to declaration and initialization. They should not be declared inside if statements either.
