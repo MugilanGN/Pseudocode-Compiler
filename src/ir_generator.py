@@ -27,26 +27,33 @@ class Generator:
     
     def setup_std_funcs(self):
 
-        fmt_type = ir.ArrayType(ir.IntType(8),5)
-        fmt_double = "%lf\n\0"
+        fmt_type = ir.ArrayType(ir.IntType(8),4)
+        fmt_double = "%lf\0"
         c_fmt = ir.Constant(fmt_type, bytearray(fmt_double.encode("utf8")))
         self.double_fmt = ir.GlobalVariable(self.module, c_fmt.type, "fmt_double")
         self.double_fmt.global_constant = True
         self.double_fmt.initializer = c_fmt
 
-        fmt_type = ir.ArrayType(ir.IntType(8),4)
-        fmt_string = "%s\n\0"
+        fmt_type = ir.ArrayType(ir.IntType(8),3)
+        fmt_string = "%s\0"
         c_fmt = ir.Constant(fmt_type, bytearray(fmt_string.encode("utf8")))
         self.string_fmt = ir.GlobalVariable(self.module, c_fmt.type, "fmt_string")
         self.string_fmt.global_constant = True
         self.string_fmt.initializer = c_fmt
 
-        fmt_type = ir.ArrayType(ir.IntType(8),4)
-        fmt_int= "%d\n\0"
+        fmt_type = ir.ArrayType(ir.IntType(8),3)
+        fmt_int= "%d\0"
         c_fmt = ir.Constant(fmt_type, bytearray(fmt_int.encode("utf8")))
         self.int_fmt = ir.GlobalVariable(self.module, c_fmt.type, "fmt_int")
         self.int_fmt.global_constant = True
         self.int_fmt.initializer = c_fmt
+          
+        fmt_type = ir.ArrayType(ir.IntType(8),2)
+        fmt_newline = "\n\0"
+        c_fmt = ir.Constant(fmt_type, bytearray(fmt_newline.encode("utf8")))
+        self.newline_fmt = ir.GlobalVariable(self.module, c_fmt.type, "fmt_newline")
+        self.newline_fmt.global_constant = True
+        self.newline_fmt.initializer = c_fmt
 
         void_ptr_ty = ir.IntType(8).as_pointer()
         printf_ty = ir.FunctionType(ir.IntType(32), [void_ptr_ty], var_arg=True)
@@ -55,11 +62,14 @@ class Generator:
         malloc_ty = ir.FunctionType(void_ptr_ty, [ir.IntType(32)])
         self.malloc = ir.Function(self.module, malloc_ty, name="malloc")
 
-        free_ty = ir.FunctionType(ir.VoidType(), [void_ptr_ty])
-        self.free = ir.Function(self.module, free_ty, name="free")
-
         memcpy_ty = ir.FunctionType(ir.VoidType(), [void_ptr_ty, void_ptr_ty, ir.IntType(32)])
         self.memcpy = ir.Function(self.module, memcpy_ty, name="memcpy")
+            
+        scanf_ty = ir.FunctionType(ir.IntType(32), [void_ptr_ty], var_arg=True)
+        self.scanf = ir.Function(self.module, scanf_ty, name="scanf")
+
+        realloc_ty = ir.FunctionType(ir.VoidType(), [void_ptr_ty, ir.IntType(32)])
+        self.realloc = ir.Function(self.module, realloc_ty, name="realloc")
         
     def generate(self, ast=[[]], output="output.ll"):
         
@@ -200,7 +210,8 @@ class Generator:
             elif node.dType == str:
                 if l.name in self.variables:
                     if self.variables[l.name] != l.length:
-                        builder.call(self.free, [lvalue])
+                        builder.call(self.realloc, [lvalue, ir.IntType(32)(l.length)])
+                        self.variables[l.name] = l.length
 
                 else:
                     self.variables[l.name] = l.length
@@ -336,11 +347,8 @@ class Generator:
                 if isinstance(raw_data, pc_ast.Variable):
                     data = builder.load(data,name=raw_data.name + "_val",align=None)
 
-                builder.call(self.printf, [fmt_ptr, data], name="print")
-
             elif raw_data.dType == str:
                 fmt_ptr = builder.gep(self.string_fmt, [ir.IntType(32)(0), ir.IntType(32)(0)], inbounds=False, name="fmt_ptr")
-                builder.call(self.printf, [fmt_ptr, data], name="print")
 
             elif raw_data.dType == int:
                 fmt_ptr = builder.gep(self.int_fmt, [ir.IntType(32)(0), ir.IntType(32)(0)], inbounds=False, name="fmt_ptr")
@@ -348,7 +356,10 @@ class Generator:
                 if isinstance(raw_data, pc_ast.Variable):
                     data = builder.load(data,name=raw_data.name + "_val",align=None)
 
-                builder.call(self.printf, [fmt_ptr, data], name="print")
+            builder.call(self.printf, [fmt_ptr, data], name="print")
+                
+            fmt_ptr = builder.gep(self.newline_fmt, [ir.IntType(32)(0), ir.IntType(32)(0)], inbounds=False, name="fmt_ptr")
+            builder.call(self.printf, [fmt_ptr], name="print")
 
             return builder
 
@@ -387,10 +398,10 @@ class Generator:
             builder.branch(loop_body)
             loop_body_builder = ir.IRBuilder(loop_body)
 
-            condition = self.codegen(condition, loop_body_builder)
-
             for statement in body:
                 loop_body_builder = self.codegen(statement, loop_body_builder)
+            
+            condition = self.codegen(condition, loop_body_builder)
 
             loop_exit = self.main.append_basic_block(name="while.exit")
             loop_exit_builder = ir.IRBuilder(loop_exit)
@@ -398,6 +409,26 @@ class Generator:
             loop_body_builder.cbranch(condition, loop_body, loop_exit)
 
             return loop_exit_builder
+        
+        elif isinstance(node, pc_ast.Input):
+        
+            variable = self.codegen(node.variable, builder)
+
+            #builder.call(self.realloc, [variable, ir.IntType(32)(5)]) for strings
+            self.variables[node.variable.name] = 0
+
+            if node.dType == int:
+                fmt_ptr = builder.gep(self.int_fmt, [ir.IntType(32)(0), ir.IntType(32)(0)], inbounds=False, name="fmt_ptr")
+
+            elif node.dType == float:
+                fmt_ptr = builder.gep(self.double_fmt, [ir.IntType(32)(0), ir.IntType(32)(0)], inbounds=False, name="fmt_ptr")
+
+            elif node.dType == str:
+                fmt_ptr = builder.gep(self.string_fmt, [ir.IntType(32)(0), ir.IntType(32)(0)], inbounds=False, name="fmt_ptr")
+
+            builder.call(self.scanf, [fmt_ptr, variable], name="scan")
+
+            return builder
 
 if __name__ == "__main__":
 
