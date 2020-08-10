@@ -1,0 +1,48 @@
+number = 0
+
+OUTPUT "Enter the secret number"
+INPUT number
+
+tries = 0
+
+OUTPUT "How many tries are allowed?"
+INPUT tries
+
+DOUBLE guesses[tries]
+
+i = 0
+
+x = 1
+
+WHILE x == 1 DO
+    OUTPUT "Enter a number"
+    INPUT guesses[i]
+    
+    IF guesses[i] < number THEN
+        OUTPUT "The guess is too low"
+    
+    ELSE
+        IF guesses[i] > number THEN
+            OUTPUT "The guess is too high"
+        ELSE
+            OUTPUT "The guess is correct!"
+            x = 0
+        ENDIF
+    ENDIF
+  
+    i = i + 1
+    
+    IF i  == tries THEN
+        x = 0
+        OUTPUT "You ran out of attempts"
+    ENDIF
+ENDWHILE
+
+i = 0
+
+OUTPUT "Here are your guesses:"
+
+WHILE i < tries DO
+    OUTPUT guesses[i]
+    i = i + 1
+ENDWHILE
