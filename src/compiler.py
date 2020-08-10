@@ -26,7 +26,8 @@ from ir_generator import Generator
 def main(filename, output):
     
     input_file = open(filename)
-    lines = [line.lstrip() for i, line in enumerate(input_file)]
+    lines = [line.lstrip() for i, line in enumerate(input_file) if line.strip()]
+    lines[-1] = lines[-1].rstrip()
     input_file.close()
 
     text = ''.join(lines)
