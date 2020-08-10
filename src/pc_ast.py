@@ -92,10 +92,11 @@ class Output:
         return (self.data)
     
 class Input:
-    __slots__ = ('variable')
+    __slots__ = ('variable', 'dType')
     
-    def __init__(self, variable):
+    def __init__(self, variable, dType):
         self.variable = variable
+        self.dType = dType
         
     def children(self):
         return None
