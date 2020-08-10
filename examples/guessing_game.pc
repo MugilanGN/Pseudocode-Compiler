@@ -8,7 +8,7 @@ tries = 0
 OUTPUT "How many tries are allowed?"
 INPUT tries
 
-DOUBLE guesses[tries]
+INT guesses[tries]
 
 i = 0
 
