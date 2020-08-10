@@ -91,7 +91,8 @@ class PC_Parser:
                        | if_stmt
                        | while_stmt
                        | for_stmt
-                       | io_stmt'''
+                       | output_stmt
+                       | input_stmt'''
 
         p[0] = p[1]
 
@@ -133,16 +134,30 @@ class PC_Parser:
             print("Undefined Variable")
             sys.exit()
 
-    def p_io_stmt(self, p):
-        '''io_stmt : INPUT VAR
-                   | OUTPUT expression'''
+    def p_input_stmt(self, p):
+        '''input_stmt : INPUT VAR
+                      | INPUT array_index'''
 
-        if p[1] == 'INPUT':
-            p[2].dType = "undecided"
-            p[0] = pc_ast.Input(p[2])
+        if isinstance(p[2], pc_ast.Array_Element):
+            name = p[2].name
+        else:
+            name = p[2]
+        
+        if name not in self.variable_types:
+            print("The variable " + name + " is undefined")
+            sys.exit()
+            
+        if isinstance(p[2], pc_ast.Array_Element):
+             var = p[2]
+        else:
+            var = pc_ast.Variable(self.variable_types[name], p[2],0)
+        
+        p[0] = pc_ast.Input(var, self.variable_types[name])
+            
+    def p_output_stmt(self, p):
+        '''output_stmt : OUTPUT expression'''
 
-        elif p[1] == 'OUTPUT':
-            p[0] = pc_ast.Output(p[2])
+        p[0] = pc_ast.Output(p[2])
 
     def p_expression_arithmetic_binop(self, p):
         '''expression : expression PLUS expression
