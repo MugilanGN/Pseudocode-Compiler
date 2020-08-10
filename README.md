@@ -12,6 +12,7 @@ A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR 
     - [ While Loops ](#while)
     - [ Arrays ](#arrays)
     - [ Output ](#output)
+    - [ Input ](#input)
 - [ Usage ](#Usage)
     - [ Executing the Compiler ](#compiler)
     - [ The Lexer ](#lexer)
@@ -153,7 +154,7 @@ x[10] = 345 + 3
 <a name="output"></a>
 ### Output
 
-The Output statement prints whatever it is given to the screen.
+The OUTPUT statement prints whatever it is given to the screen.
 
 ```OUTPUT "Hello World"```
 
@@ -164,6 +165,29 @@ OUTPUT 5 + (4.0 * 3)
 OUTPUT x + y[1]
 OUTPUT "Hello" + " " + "World"
 ```
+
+<a name="input"></a>
+### Input
+
+The INPUT statement takes user input and stores it to either a variable or an array index.
+
+The variable to be input must be declared earlier in the code. This is to prevent ambiguity concerning the type of the variable.
+
+```
+x = 0
+INPUT x // x is declared before, so it works
+
+INPUT y // This is illegal, since y has not been declared or given a value before
+```
+
+Array indices can also be used instead of variables
+
+```
+INT x[5]
+INPUT x[2] //stores input as the 3rd array value
+```
+
+It can only take Double and Int inputs.
 
 <a name="Usage"></a>
 ## Usage
