@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-A simple program which chains together the various
+A simple program that chains together the various
 programs into a functional Pseudocode to IR compiler 
 '''
 
