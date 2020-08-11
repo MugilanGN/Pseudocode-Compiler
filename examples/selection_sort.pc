@@ -1,0 +1,47 @@
+n = 0
+
+OUTPUT "Enter the number of elements:"
+INPUT n
+
+INT x[n]
+
+i = 0
+
+OUTPUT "Now enter each element one by one"
+
+WHILE i < n DO
+    INPUT x[i]
+    i = i + 1
+ENDWHILE
+
+i = 0
+j = 0
+min = 0
+
+WHILE i < n DO
+    j = i
+    min = j
+    WHILE j < n DO 
+        IF x[j] < x[min] THEN
+            min = j
+        ENDIF
+        j = j + 1
+    ENDWHILE
+    
+    temp = x[i]
+    temp2 = x[min]
+    
+    x[min] = temp
+    x[i] = temp2
+    
+    i = i + 1
+ENDWHILE
+
+OUTPUT "Here is the sorted Array:"
+
+i = 0
+
+WHILE i < n DO
+    OUTPUT x[i]
+    i = i + 1
+ENDWHILE
