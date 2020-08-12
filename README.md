@@ -212,9 +212,9 @@ It can only take Double and Int inputs.
 <a name="ir"></a>
 ### Executing the Compiled Output
  
-Once the compiler has been executed, it will create a .ll file. However, it cannot be executed just yet. This is to provide flexibility with what you do with the generated LLVM IR. If you want you can compile it to machine code using LLC and GCC, or even compile it to JavaScript.
+Once the compiler has been executed, it will create a .ll file. However, it cannot be executed just yet. This is to provide flexibility with what you want to do with the generated LLVM IR. For example, you can compile the .ll file to machine code using LLC and GCC, or even compile it to JavaScript.
 
-If you want to directly execute the output, you can download the lli.exe file from the releases page. Then, you can add its file-path to Path. This will let you call it from the Command Line.
+If you want to directly execute the .ll file, you can download the lli.exe file from the releases page. Then, you can add its file-path to Path. This will let you call it from the Command Line.
 
 Now it's as simple as calling it on the .ll file from the Command Line:
 
