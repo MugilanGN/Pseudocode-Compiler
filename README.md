@@ -7,9 +7,6 @@ A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR 
 - [ Usage ](#Usage)
     - [ Compiling the Pseudocode ](#compiler)
     - [ Executing the Output](#ir)
-    - [ The Lexer ](#lexer)
-    - [ The Parser ](#parser)
-    - [ The IR Generator ](#generator)
 - [ Language Specification ](#LanguageSpecification)
     - [ Data Types ](#types)
     - [ Literals ](#literals)
@@ -19,6 +16,10 @@ A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR 
     - [ Arrays ](#arrays)
     - [ Output ](#output)
     - [ Input ](#input)
+- [ Component Usage ](#components)
+    - [ The Lexer ](#lexer)
+    - [ The Parser ](#parser)
+    - [ The IR Generator ](#generator)
 - [ Support ](#Support)
 
 <a name="Installation"></a>
@@ -65,70 +66,6 @@ Now it's as simple as calling it on the .ll file from the Command Line:
 ```shell
 lli output.ll
 ```
-  
-<a name="lexer"></a>
-### The Lexer
-
-The lexer can be imported into your code like so:
-
-```python
-from pc_lexer import PC_Lexer
-```
-
-The PC_Lexer class can then be instantiated and built:
-
-```python
-lexer = PC_Lexer()
-lexer.build()
-```
-
-To output the tokens of a string input, you can use the ```test``` method:
-
-```python
-lexer.test("INT") # will return the INT token
-```
-
-<a name="parser"></a>
-### The Parser
-
-The parser class resides in pc_parser:
-
-```python
-from pc_parser import PC_Parser
-```
-
-If no lexer is provided, it will default to using the PC_Lexer outlined above:
-
-```python
-parser = PC_Parser(lexer)
-```
-
-The ```parse``` method will output an AST of the string input:
-
-```python
-parser.parse("x = 5") #will return an AST with an assignment object
-```
-
-<a name="generator"></a>
-### The IR Generator
-
-The IR generator can be used standalone without the parser and lexer. It takes an AST and generates LLVM IR from it.
-
-This is how you use it:
-
-```python
-from ir_generator import Generator
-
-codegen = Generator() #creates a Generator object
-```
-
-The generator class has a ```generate``` method which takes in an AST and output file's name. If the name of the output file is not given, it defaults to "output.ll"
-
-```python
-module = codegen.generate(ast, output)
-```
-
-This will return an llvmlite module object, which can either be written into a file or used elsewhere
 
 <a name="LanguageSpecification"></a>
 ## Language Specification
@@ -285,6 +222,73 @@ INPUT x[2] //stores input as the 3rd array value
 ```
 
 It can only take Double and Int inputs.
+
+<a name="components"></a>
+## Component Usage
+ 
+<a name="lexer"></a>
+### The Lexer
+
+The lexer can be imported into your code like so:
+
+```python
+from pc_lexer import PC_Lexer
+```
+
+The PC_Lexer class can then be instantiated and built:
+
+```python
+lexer = PC_Lexer()
+lexer.build()
+```
+
+To output the tokens of a string input, you can use the ```test``` method:
+
+```python
+lexer.test("INT") # will return the INT token
+```
+
+<a name="parser"></a>
+### The Parser
+
+The parser class resides in pc_parser:
+
+```python
+from pc_parser import PC_Parser
+```
+
+If no lexer is provided, it will default to using the PC_Lexer outlined above:
+
+```python
+parser = PC_Parser(lexer)
+```
+
+The ```parse``` method will output an AST of the string input:
+
+```python
+parser.parse("x = 5") #will return an AST with an assignment object
+```
+
+<a name="generator"></a>
+### The IR Generator
+
+The IR generator can be used standalone without the parser and lexer. It takes an AST and generates LLVM IR from it.
+
+This is how you use it:
+
+```python
+from ir_generator import Generator
+
+codegen = Generator() #creates a Generator object
+```
+
+The generator class has a ```generate``` method which takes in an AST and output file's name. If the name of the output file is not given, it defaults to "output.ll"
+
+```python
+module = codegen.generate(ast, output)
+```
+
+This will return an llvmlite module object, which can either be written into a file or used elsewhere
 
 <a name="Support"></a>
 ## Support
