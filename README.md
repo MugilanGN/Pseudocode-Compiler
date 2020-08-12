@@ -14,7 +14,8 @@ A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR 
     - [ Output ](#output)
     - [ Input ](#input)
 - [ Usage ](#Usage)
-    - [ Executing the Compiler ](#compiler)
+    - [ Compiling the Pseudocode ](#compiler)
+    - [ Executing the Output](#ir)
     - [ The Lexer ](#lexer)
     - [ The Parser ](#parser)
     - [ The IR Generator ](#generator)
@@ -193,7 +194,7 @@ It can only take Double and Int inputs.
 ## Usage
 
 <a name="compiler"></a>
-### Executing the Compiler
+### Compiling the Pseudocode
   
   Compiler.py is the program that will compile the Pseudocode. It can be ran through the CLI.
 
@@ -208,6 +209,19 @@ It can only take Double and Int inputs.
   ```sh
   python src/compiler.py --filename="ex/code.pc" --output="code.ll"
   ```
+<a name="ir"></a>
+### Executing the Compiled Output
+ 
+Once the compiler has been executed, it will create a .ll file. However, it cannot be executed just yet. This is to provide flexibility with what you do with the generated LLVM IR. If you want you can compile it to machine code using LLC and GCC, or even compile it to JavaScript.
+
+If you want to directly execute the output, you can download the lli.exe file from the releases page. Then, you can add its file-path to Path. This will let you call it from the Command Line.
+
+Now it's as simple as calling it on the .ll file from the Command Line:
+
+```shell
+lli output.ll
+```
+  
 <a name="lexer"></a>
 ### The Lexer
 
