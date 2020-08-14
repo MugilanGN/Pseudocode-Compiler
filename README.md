@@ -154,9 +154,7 @@ A while loop can be represented like so:
 
 ```
 WHILE condition DO
-   statement
-   ...
-   statement
+   statements
 ENDWHILE
 ```
 
