@@ -121,19 +121,23 @@ If statements follow the following format:
 
 ```
 IF condition THEN
-  statement  //indents are optional
-  ...
-  statement
+  statements  //indents are optional
+ELSE IF condition THEN
+  statements
 ELSE
-  statement
-  ...
-  statement
+  statements
 ENDIF
 ```
 
-If statements can also be nested inside one another.
+The Else If clause is optional and can also be used as many times as necessary in a single If statement.
 
-The else can be ommited, leaving just the block that executes if it is true.
+If statements can be nested. The Else statement is also optional and can be ommited entirely:
+
+```
+IF condition THEN
+  statements
+ENDIF
+```
 
 The condition takes the form of a comparison, such as:
 
