@@ -129,7 +129,7 @@ ELSE
 ENDIF
 ```
 
-The Else If clause is optional and can also be used as many times as necessary in a single If statement.
+The Else If clause is optional or can also be used as many times as necessary in a single If statement.
 
 If statements can be nested. The Else statement is also optional and can be ommited entirely:
 
