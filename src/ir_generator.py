@@ -117,11 +117,12 @@ class Generator:
                     str_val = ir.Constant(dType, bytearray((node.value+"\0").encode("utf8")))
                     str_global = ir.GlobalVariable(self.module, str_val.type, "_str." + node.value)
                     str_global.global_constant = True
-                    str_global.initializer = str_val
-                    fmt_ptr = builder.gep(str_global, [ir.IntType(32)(0), ir.IntType(32)(0)], inbounds=False, name=node.value+"_ptr")
-                    self.constants[node.value] = fmt_ptr
-
-                return self.constants[node.value]
+                    str_global.initializer = str_val            
+                    self.constants[node.value] = str_global
+                
+                fmt_ptr = builder.gep(self.constants[node.value], [ir.IntType(32)(0), ir.IntType(32)(0)], inbounds=False, name=node.value+"_ptr")
+                
+                return fmt_ptr
 
         elif isinstance(node, pc_ast.Variable):
 
