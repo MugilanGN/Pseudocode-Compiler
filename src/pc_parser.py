@@ -66,10 +66,14 @@ class PC_Parser:
 
     def p_if_stmt(self, p):
         '''if_stmt : IF expression THEN NEWLINE stmt_list NEWLINE ENDIF
-                   | IF expression THEN NEWLINE stmt_list NEWLINE ELSE NEWLINE stmt_list NEWLINE ENDIF'''
+                   | IF expression THEN NEWLINE stmt_list NEWLINE ELSE NEWLINE stmt_list NEWLINE ENDIF
+                   | IF expression THEN NEWLINE stmt_list NEWLINE ELSE if_stmt'''
 
         if len(p) == 8:
             p[0] = pc_ast.If(p[2],p[5],None)
+            
+        elif len(p) == 9:
+            p[0] = pc_ast.If(p[2],p[5],[p[8]])
 
         elif len(p) == 12:
             p[0] = pc_ast.If(p[2],p[5],p[9])
