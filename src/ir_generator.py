@@ -23,7 +23,9 @@ class Generator:
     def __init__(self):
         
         self.variables = {}
+        self.functions = {}
         self.constants = {}
+        self.scope     = ''
     
     def setup_std_funcs(self):
 
@@ -75,6 +77,8 @@ class Generator:
         
         self.variables = {}
         self.constants = {}
+        self.functions = {}
+        self.scope     = ''
 
         self.module = ir.Module(name=output)
 
@@ -85,8 +89,10 @@ class Generator:
 
         main_ty = ir.FunctionType(ir.IntType(32), ())
         self.main = ir.Function(self.module, main_ty, name="main")
+        
+        self.scope = self.main
 
-        main_block = self.main.append_basic_block(name="entry")
+        main_block = self.scope.append_basic_block(name="entry")
         builder = ir.IRBuilder(main_block)
 
         for statement in ast[0]:
@@ -117,11 +123,11 @@ class Generator:
                     str_val = ir.Constant(dType, bytearray((node.value+"\0").encode("utf8")))
                     str_global = ir.GlobalVariable(self.module, str_val.type, "_str." + node.value)
                     str_global.global_constant = True
-                    str_global.initializer = str_val            
+                    str_global.initializer = str_val
                     self.constants[node.value] = str_global
                 
                 fmt_ptr = builder.gep(self.constants[node.value], [ir.IntType(32)(0), ir.IntType(32)(0)], inbounds=False, name=node.value+"_ptr")
-                
+
                 return fmt_ptr
 
         elif isinstance(node, pc_ast.Variable):
@@ -139,7 +145,7 @@ class Generator:
 
         elif isinstance(node, pc_ast.Array_Declaration):
 
-            self.variables[node.name] = node.dType
+            self.variables[(node.name, self.scope)] = node.dType
 
             r = node.elements
 
@@ -195,27 +201,27 @@ class Generator:
                 rvalue = self.codegen(r, builder)
 
             if node.dType == float:
-                if l.name not in self.variables:
-                    self.variables[l.name] = 0
+                if (l.name, self.scope) not in self.variables:
+                    self.variables[(l.name, self.scope)] = 0
                     builder.alloca(ir.DoubleType(),size=None,name=l.name)
 
                 builder.store(rvalue,lvalue,align=None)
 
             elif node.dType == int:
-                if l.name not in self.variables:
-                    self.variables[l.name] = 0
+                if (l.name, self.scope) not in self.variables:
+                    self.variables[(l.name, self.scope)] = 0
                     builder.alloca(ir.IntType(32),size=None,name=l.name)
 
                 builder.store(rvalue,lvalue,align=None)
 
             elif node.dType == str:
-                if l.name in self.variables:
-                    if self.variables[l.name] != l.length:
+                if (l.name, self.scope) in self.variables:
+                    if self.variables[(l.name, self.scope)] != l.length:
                         builder.call(self.realloc, [lvalue, ir.IntType(32)(l.length)])
-                        self.variables[l.name] = l.length
+                        self.variables[(l.name, self.scope)] = l.length
 
                 else:
-                    self.variables[l.name] = l.length
+                    self.variables[(l.name, self.scope)] = l.length
                     builder.call(self.malloc, [ir.IntType(32)(l.length)], name=l.name)
 
                 if isinstance(r, pc_ast.Constant):
@@ -394,7 +400,7 @@ class Generator:
 
             condition, body = node.children()
 
-            loop_body = self.main.append_basic_block(name="while.body")
+            loop_body = self.scope.append_basic_block(name="while.body")
 
             builder.branch(loop_body)
             loop_body_builder = ir.IRBuilder(loop_body)
@@ -404,7 +410,7 @@ class Generator:
             
             condition = self.codegen(condition, loop_body_builder)
 
-            loop_exit = self.main.append_basic_block(name="while.exit")
+            loop_exit = self.scope.append_basic_block(name="while.exit")
             loop_exit_builder = ir.IRBuilder(loop_exit)
 
             loop_body_builder.cbranch(condition, loop_body, loop_exit)
@@ -416,7 +422,7 @@ class Generator:
             variable = self.codegen(node.variable, builder)
 
             #builder.call(self.realloc, [variable, ir.IntType(32)(5)]) for strings
-            self.variables[node.variable.name] = 0
+            self.variables[(node.variable.name, self.scope)] = 0
 
             if node.dType == int:
                 fmt_ptr = builder.gep(self.int_fmt, [ir.IntType(32)(0), ir.IntType(32)(0)], inbounds=False, name="fmt_ptr")
@@ -429,6 +435,96 @@ class Generator:
 
             builder.call(self.scanf, [fmt_ptr, variable], name="scan")
 
+            return builder
+        
+        elif isinstance(node, pc_ast.Function_Decl):
+            
+            args = []
+            
+            for arg in node.args:
+                if arg[1] == int:
+                    args.append(ir.IntType(32))
+                
+                elif arg[1] == float:
+                    args.append(ir.DoubleType())
+                    
+            if node.dType == int:
+                dType = ir.IntType(32)
+                
+            elif node.dType == float:
+                dType = ir.DoubleType()
+                    
+            fnty = ir.FunctionType(dType, args)
+            
+            func = ir.Function(self.module, fnty, name=node.name)
+                           
+            self.variables[(node.name, self.scope)] = dType
+            self.functions[node.name] = func
+            
+            for i in range(0, len(func.args)):
+                func.args[i].name = node.args[i][0] + "_arg"
+            
+            block = func.append_basic_block(name="entry")
+            func_builder = ir.IRBuilder(block)
+            
+            self.scope = func
+            
+            for i in range(0, len(node.args)):
+                arg = node.args[i]
+                
+                if arg[1] == int:
+                    dType = ir.IntType(32)
+
+                elif arg[1] == float:
+                    dType = ir.DoubleType()
+                    
+                var = func_builder.alloca(dType,size=None,name=arg[0])
+                func_builder.store(func.args[i],var,align=None)
+            
+            for statement in node.body:
+                func_builder = self.codegen(statement, func_builder)
+            
+            if not func_builder.block.is_terminated:
+                if node.dType == int:
+                    dType = ir.IntType(32)
+                    func_builder.ret(dType(0))
+
+                elif node.dType == float:
+                    dType = ir.DoubleType()
+                    func_builder.ret(dType(0.0))
+            
+            self.scope = self.main
+            
+            return builder
+    
+        elif isinstance(node, pc_ast.Function_Call):
+            
+            func = self.functions[node.name]
+            
+            args = []
+            
+            for arg in node.args:
+                
+                built_arg = self.codegen(arg, builder)
+                
+                if isinstance(arg, pc_ast.Array_Element) or isinstance(arg, pc_ast.Variable):
+                    built_arg = builder.load(built_arg,name=arg.name + "_val",align=None)
+                    
+                args.append(built_arg)
+            
+            res = builder.call(func, args, name=node.name + '_call')
+            
+            return res 
+        
+        elif isinstance(node, pc_ast.Return):
+            
+            res = self.codegen(node.data, builder)
+            
+            if isinstance(node.data, pc_ast.Array_Element) or isinstance(node.data, pc_ast.Variable):
+                res = builder.load(res,name="res",align=None)
+            
+            builder.ret(res)
+            
             return builder
 
 if __name__ == "__main__":
