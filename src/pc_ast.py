@@ -10,17 +10,6 @@ __status__ = "Developer"
 __version__ = "1.0.0"
 
 
-class Expression:
-    __slots__ = ('expr','dType')
-    
-    def __init__(self, expr, dType):
-        self.expr = expr
-        self.dType = dType
-        
-    def children(self):
-        nodelist = (self.expr)
-        return nodelist
-
 class Assignment:
     __slots__ = ('op','dType','lvalue','rvalue')
     
@@ -155,3 +144,36 @@ class For:
         
     def children(self):
         return (self.assignment, self.final, self.body)
+
+class Function_Decl:
+    __slots__ = ('name','args','body','dType')
+    
+    def __init__(self, name, args, body, dType):
+        self.name = name
+        self.args = args
+        self.body = body
+        self.dType = dType
+    
+    def children(self):
+        return None
+    
+class Function_Call:
+    __slots__ = ('name', 'args', 'dType', 'length')
+
+    def __init__(self, name, args, dType, length):
+        self.name = name
+        self.args = args
+        self.dType = dType
+        self.length = length
+    
+    def children(self):
+        return self.args
+    
+class Return:
+    __slots__ = ('data')
+    
+    def __init__(self, data):
+        self.data = data
+    
+    def children(self):
+        return self.data
