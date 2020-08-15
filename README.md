@@ -16,6 +16,7 @@ A modular Pseudocode compiler that compiles IGCSE pseudocode to LLVM IR. The IR 
     - [ Arrays ](#arrays)
     - [ Output ](#output)
     - [ Input ](#input)
+    - [ Functions ](#functions)
 - [ Component Usage ](#components)
     - [ The Lexer ](#lexer)
     - [ The Parser ](#parser)
@@ -224,6 +225,9 @@ INPUT x[2] //stores input as the 3rd array value
 ```
 
 It can only take Double and Int inputs.
+
+<a name="functions"></a>
+### Functions
 
 <a name="components"></a>
 ## Component Usage
