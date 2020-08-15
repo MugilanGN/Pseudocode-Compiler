@@ -1,0 +1,22 @@
+INT SUBROUTINE add(INT x, INT y)
+    RETURN x + y
+ENDSUBROUTINE
+
+INT SUBROUTINE fibonacci(INT x)
+    IF x <= 0 THEN
+        RETURN 0
+    ELSE IF x == 1 THEN
+        RETURN 0
+    ELSE IF x == 2 THEN
+        RETURN 1
+    ELSE
+        RETURN add(fibonacci(x - 2), fibonacci(x - 1))
+    ENDIF
+ENDSUBROUTINE
+
+y = 0
+
+WHILE y <> 100 DO
+    INPUT y
+    OUTPUT fibonacci(y)
+ENDWHILE
