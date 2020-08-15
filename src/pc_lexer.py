@@ -36,12 +36,14 @@ class PC_Lexer(object):
         'VAR',
         'INT','DOUBLE',
         'INPUT','OUTPUT',
+        'SUBROUTINE','ENDSUBROUTINE','RETURN',
         'IF','THEN','ELSE','ENDIF',
         'WHILE','DO','ENDWHILE',
         'FOR','TO','NEXT',
         'INT_CONST','DOUBLE_CONST','STRING_CONST',
         'PLUS','MINUS','TIMES','DIVIDE','EQUALS','PERCENT',
-        'LPAREN','RPAREN', 'NEWLINE',
+        'COMMA','NEWLINE',
+        'LPAREN','RPAREN',
         'LBRACKET','RBRACKET',
         'LESS_THAN','LESS_EQUAL',
         'GREATER_THAN','GREATER_EQUAL',
@@ -64,11 +66,16 @@ class PC_Lexer(object):
     t_EQUALITY       = r'=='
     t_NOT_EQUALITY   = r'<>'
 
-
     t_LPAREN         = r'\('
     t_RPAREN         = r'\)'
     t_LBRACKET       = r'\['
     t_RBRACKET       = r'\]'
+    
+    t_COMMA          = r'\,'
+    
+    t_SUBROUTINE     = r'SUBROUTINE'
+    t_ENDSUBROUTINE  = r'ENDSUBROUTINE'
+    t_RETURN         = r'RETURN'
 
     t_INT            = 'INT'
     t_DOUBLE         = 'DOUBLE'
