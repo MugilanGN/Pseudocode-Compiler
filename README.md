@@ -229,6 +229,48 @@ It can only take Double and Int inputs.
 <a name="functions"></a>
 ### Functions
 
+Functions are defined like so:
+
+```
+TYPE SUBROUTINE name(TYPE arg, TYPE2 arg2, ...)
+    statements
+ENDSUBROUTINE
+```
+
+Type can be substituted with DOUBLE or INT. String and Array types are not supported yet as arguments or return values.
+
+Each argument should be accompanied by its type. Alternatively, a function call also be defined with no arguments:
+
+```
+DOUBLE SUBROUTINE zero()
+    OUTPUT 0.0
+ENDSUBROUTINE
+
+z = zero()
+```
+
+For example, this is a possible function:
+
+```
+INT SUBROUTINE add(INT x, INT y)
+    RETURN x + y
+ENDSUBROUTINE
+```
+If there is no return statement, the function will return either 0 or 0.0, depending on the type that the function should return.
+
+This is the syntax to call a function:
+
+```
+z = function(arg, arg2, ...)
+```
+
+The functional call can be used just like a normal variable. For example:
+
+```
+z = A[add(x,y) - 2]
+OUTPUT add(3,z)
+```
+
 <a name="components"></a>
 ## Component Usage
  
