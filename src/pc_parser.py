@@ -31,6 +31,8 @@ class PC_Parser:
         self.ast             = []
         self.variable_types  = {}
         self.var_lengths     = {}
+        self.functions       = {}
+        self.scope           = ''
         
         self.Lexer = lexer()       
         self.Lexer.build()
@@ -44,6 +46,8 @@ class PC_Parser:
         self.ast             = []
         self.variable_types  = {}
         self.var_lengths     = {}
+        self.functions       = {}
+        self.scope           = ''
 
         self.Parser.parse(input=text, lexer=self.Lexer)
 
@@ -90,13 +94,17 @@ class PC_Parser:
 
     def p_simple_stmt(self, p):
         '''simple_stmt : expression
+                       | expr_list
+                       | arg_list
                        | assignment_stmt
                        | array_decl_stmt
                        | if_stmt
                        | while_stmt
                        | for_stmt
                        | output_stmt
-                       | input_stmt'''
+                       | input_stmt
+                       | function_stmt
+                       | return_stmt'''
 
         p[0] = p[1]
 
@@ -112,7 +120,7 @@ class PC_Parser:
         name = p[2].name
         elements = p[2].index
 
-        self.variable_types[name] = dType
+        self.variable_types[(name, self.scope)] = dType
 
         p[0] = pc_ast.Array_Declaration(dType, name, elements)
 
@@ -124,16 +132,16 @@ class PC_Parser:
         expr = p[3]
         length = p[3].length
 
-        self.variable_types[var] = dType
-        self.var_lengths[var] = length
+        self.variable_types[(var, self.scope)] = dType
+        self.var_lengths[(var, self.scope)] = length
         var = pc_ast.Variable(dType, var,length)
         p[0] = pc_ast.Assignment("=",dType,var,expr)
 
     def p_array_assign_stmt(self, p):
         '''assignment_stmt : array_index EQUALS expression'''
 
-        if p[1].name in self.variable_types:
-            p[0] = pc_ast.Assignment("=", self.variable_types[p[1].name], p[1], p[3])
+        if (p[1].name, self.scope) in self.variable_types:
+            p[0] = pc_ast.Assignment("=", self.variable_types[(p[1].name, self.scope)], p[1], p[3])
         else:
             print("Undefined Variable")
             sys.exit()
@@ -147,21 +155,97 @@ class PC_Parser:
         else:
             name = p[2]
         
-        if name not in self.variable_types:
+        if (name, self.scope) not in self.variable_types:
             print("The variable " + name + " is undefined")
             sys.exit()
             
         if isinstance(p[2], pc_ast.Array_Element):
              var = p[2]
         else:
-            var = pc_ast.Variable(self.variable_types[name], p[2],0)
+            var = pc_ast.Variable(self.variable_types[(name, self.scope)], p[2],0)
         
-        p[0] = pc_ast.Input(var, self.variable_types[name])
+        p[0] = pc_ast.Input(var, self.variable_types[(name, self.scope)])
             
     def p_output_stmt(self, p):
         '''output_stmt : OUTPUT expression'''
 
         p[0] = pc_ast.Output(p[2])
+        
+    def p_return_stmt(self, p):
+        '''return_stmt : RETURN expression'''
+        
+        p[0] = pc_ast.Return(p[2])
+        
+    def p_function_header(self, p):
+        '''function_header : INT SUBROUTINE VAR LPAREN arg_list RPAREN
+                           | DOUBLE SUBROUTINE VAR LPAREN arg_list RPAREN
+                           | INT SUBROUTINE VAR LPAREN RPAREN
+                           | DOUBLE SUBROUTINE VAR LPAREN RPAREN'''
+             
+        if p[1] == 'INT':
+            dType = int
+            
+        elif p[1] == 'DOUBLE':
+            dType = float
+        
+        name = p[3]
+        
+        self.functions[name] = dType
+        self.var_lengths[(name, self.scope)] = 0
+        
+        self.scope = name
+        
+        if len(p) == 6:
+            arg_list = []
+            
+        elif len(p) == 7:
+            arg_list = p[5]
+            
+            for arg in arg_list:
+                self.variable_types[(arg[0], self.scope)] = arg[1]
+                self.var_lengths[(arg[0], self.scope)] = 0
+        
+        p[0] = [name, arg_list, dType]
+        
+    def p_function_stmt(self, p):
+        '''function_stmt : function_header NEWLINE stmt_list NEWLINE ENDSUBROUTINE'''
+
+        name, args, dType = p[1]
+        
+        self.scope = ''
+        
+        p[0] = pc_ast.Function_Decl(name, args, p[3], dType)
+                   
+    def p_arg_list(self, p):
+        '''arg_list : INT VAR
+                    | DOUBLE VAR
+                    | arg_list COMMA INT VAR
+                    | arg_list COMMA DOUBLE VAR'''
+        
+                    
+        if p[len(p) - 2] == 'INT':
+            dType = int
+            
+        elif p[len(p) - 2] == 'DOUBLE':
+            dType = float
+        
+        if len(p) == 3:
+            
+            p[0] = [[p[2], dType]]
+            
+        elif len(p) == 5:
+
+            p[0] = p[1] + [[p[4], dType]]
+            
+    def p_expr_list(self, p):
+        '''expr_list : expression COMMA expression
+                     | expr_list COMMA expression'''
+        
+        if type(p[1]) == list:
+            p[0] = p[1] + [p[3]]
+            
+        else:
+            p[0] = [p[1], p[3]]
 
     def p_expression_arithmetic_binop(self, p):
         '''expression : expression PLUS expression
@@ -169,7 +253,7 @@ class PC_Parser:
                       | expression TIMES expression
                       | expression DIVIDE expression
                       | expression PERCENT expression'''
-
+        
         if p[1].dType == None or p[3].dType == None:
             print("Variable is undefined")
             sys.exit()
@@ -179,12 +263,12 @@ class PC_Parser:
             if p[2] == '+':
 
                 if isinstance(p[1],pc_ast.Variable):
-                    length1 = self.var_lengths[p[1].name] - 1
+                    length1 = self.var_lengths[(p[1].name, self.scope)] - 1
                 else:
                     length1 = p[1].length - 1
 
                 if isinstance(p[3],pc_ast.Variable):
-                    length2 = self.var_lengths[p[3].name]
+                    length2 = self.var_lengths[(p[3].name, self.scope)]
                 else:
                     length2 = p[3].length
 
@@ -247,7 +331,27 @@ class PC_Parser:
         'expression : LPAREN expression RPAREN'
 
         p[0] = p[2]
-
+        
+    def p_expression_func_call(self, p):
+        '''expression : VAR LPAREN expression RPAREN
+                      | VAR LPAREN expr_list RPAREN
+                      | VAR LPAREN RPAREN'''
+        
+        if p[1] not in self.functions:
+            print("Function has not been defined")
+            sys.exit()
+        
+        if len(p) == 5:
+            
+            if type(p[3]) == list:
+                p[0] = pc_ast.Function_Call(p[1], p[3], self.functions[p[1]], 0)
+                
+            else:
+                p[0] = pc_ast.Function_Call(p[1], [p[3]], self.functions[p[1]], 0)
+        
+        elif len(p) == 4:
+            p[0] = pc_ast.Function_Call(p[1], [], self.functions[p[1]], 0)
+        
     def p_expression_array_expr(self, p):
         '''expression : array_index'''
 
@@ -256,32 +360,38 @@ class PC_Parser:
     def p_expression_array_val(self, p):
         '''array_index : VAR LBRACKET expression RBRACKET'''
 
-        if p[1] in self.variable_types:
-            p[0] = pc_ast.Array_Element(self.variable_types[p[1]], p[1], p[3], 0)
+        if (p[1], self.scope) in self.variable_types:
+            p[0] = pc_ast.Array_Element(self.variable_types[(p[1], self.scope)], p[1], p[3], 0)
         else:
             p[0] = pc_ast.Array_Element(None, p[1], p[3], None)
+            
+    def p_expression_literal(self, p):
+        '''expression : literal'''
+        
+        p[0] = p[1]
 
-    def p_expression_int_constant(self, p):
-        '''expression : INT_CONST'''
+    def p_literal_int_constant(self, p):
+        '''literal : INT_CONST'''
 
         p[0] = pc_ast.Constant(int,p[1],0)
 
-    def p_expression_double_constant(self, p):
-        '''expression : DOUBLE_CONST'''
+    def p_literal_double_constant(self, p):
+        '''literal : DOUBLE_CONST'''
 
         p[0] = pc_ast.Constant(float,p[1],0)
 
-    def p_expression_string_constant(self, p):
-        '''expression : STRING_CONST'''
+    def p_literal_string_constant(self, p):
+        '''literal : STRING_CONST'''
 
         p[0] = pc_ast.Constant(str,str(p[1]),len(p[1])+1)
 
     def p_expression_var(self, p):
         'expression : VAR'
 
-        if p[1] in self.variable_types:
-            length = self.var_lengths[p[1]]
-            p[0] = pc_ast.Variable(self.variable_types[p[1]],p[1],length)
+        if (p[1], self.scope) in self.variable_types:
+            length = self.var_lengths[(p[1], self.scope)]
+            p[0] = pc_ast.Variable(self.variable_types[(p[1], self.scope)],p[1],length)
+            
         else:
             p[0] = pc_ast.Variable(None,p[1],0)
 
