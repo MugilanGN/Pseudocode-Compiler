@@ -264,7 +264,7 @@ This is the syntax to call a function:
 z = function(arg, arg2, ...)
 ```
 
-The functional call can be used just like a normal variable. For example:
+The function call can be used just like a normal variable. For example:
 
 ```
 z = A[add(x,y) - 2]
