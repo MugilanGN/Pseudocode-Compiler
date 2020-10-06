@@ -75,6 +75,8 @@ The Pseudocode syntax is similar to the IGCSE specification outlined here: https
 
 I will be using ```//``` for convenience to denote comments in the Pseudocode snippets, but keep in mind that they are not actually a part of the language, nor will they compile.
 
+**WARNING: As of now there is no FOR loop. It might take some time to make one, but until then WHILE LOOPS are the only type of loop.**
+
 <a name="types"></a>
 ### Data Types
 
