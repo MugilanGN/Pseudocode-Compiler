@@ -83,7 +83,7 @@ class Generator:
         self.module = ir.Module(name=output)
 
         triple =  binding.get_default_triple()
-        self.module.triple = triple
+        self.module.triple = "" # the default triple from llvmlite seems to not work on some devices.
 
         self.setup_std_funcs()
 
